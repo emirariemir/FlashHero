@@ -15,6 +15,7 @@ class ContentViewModel: ObservableObject {
     @Published var pickerImage: Image?
     @Published var isRecognizingText: Bool = false
     @Published var recognizedText: String?
+    @Published var isShowingCardView: Bool = false
     
     func handlePickerItemChange() {
         Task {
@@ -37,6 +38,9 @@ class ContentViewModel: ObservableObject {
         
         pickerImage = Image(uiImage: uiImage)
         recognizeText(from: uiImage)
+        
+        print("At this point, recognizeText(from:) function is called.")
+        isShowingCardView = true
     }
     
     private func recognizeText(from uiImage: UIImage) {
