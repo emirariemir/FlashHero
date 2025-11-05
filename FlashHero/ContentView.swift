@@ -10,43 +10,28 @@ import PhotosUI
 import Vision
 
 struct ContentView: View {
-    @State private var pickerItem: PhotosPickerItem?
-    @State private var pickerUiImage: UIImage?
-    @State private var pickerImage: Image?
-    
-    @State private var isRecognizingText: Bool = false
-    @State private var recognizedText: String?
+    @StateObject private var viewModel = ContentViewModel()
     
     var body: some View {
         ZStack {
             VStack {
-                PhotosPicker("Select photo", selection: $pickerItem, matching: .images)
+                PhotosPicker("Select photo", selection: $viewModel.pickerItem, matching: .images)
                 
-                pickerImage?
+                viewModel.pickerImage?
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 200, height: 300)
                 
-                if let rText = recognizedText {
-                    Text(rText)
+                if let recognizedText = viewModel.recognizedText {
+                    Text(recognizedText)
                         .font(.footnote)
                 }
             }
-            .onChange(of: pickerItem) {
-                Task {
-                    isRecognizingText = true
-                    
-                    if let loadedImageData = try? await pickerItem?.loadTransferable(type: Data.self) {
-                        pickerUiImage = UIImage(data: loadedImageData)
-                        pickerImage = Image(uiImage: pickerUiImage!)
-                        recognizeText(from: pickerUiImage!)
-                    } else {
-                        print("Failed to download image.")
-                    }
-                }
+            .onChange(of: viewModel.pickerItem) {
+                viewModel.handlePickerItemChange()
             }
             
-            if isRecognizingText {
+            if viewModel.isRecognizingText {
                 Rectangle()
                     .fill()
                     .opacity(0.3)
@@ -55,33 +40,6 @@ struct ContentView: View {
                 ProgressView()
             }
         }
-    }
-    
-    func recognizeText(from uiImage: UIImage) {
-        guard let cgImage = uiImage.cgImage else { return }
-        let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-        let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
-        
-        do {
-            try requestHandler.perform([request])
-        } catch {
-            print("Unable to perform the requests: \(error).")
-        }
-    }
-    
-    func recognizeTextHandler(request: VNRequest, error: Error?) {
-        guard let observations = request.results as? [VNRecognizedTextObservation] else {
-            return
-        }
-        
-        let recognizedStrings = observations.compactMap { observation in
-            return observation.topCandidates(1).first?.string
-        }
-        
-        print(recognizedStrings)
-        recognizedText = recognizedStrings.joined(separator: ", ")
-        
-        isRecognizingText = false
     }
 }
 
