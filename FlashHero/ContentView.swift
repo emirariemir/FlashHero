@@ -14,25 +14,45 @@ struct ContentView: View {
     @State private var pickerUiImage: UIImage?
     @State private var pickerImage: Image?
     
+    @State private var isRecognizingText: Bool = false
+    @State private var recognizedText: String?
+    
     var body: some View {
-        VStack {
-            PhotosPicker("Select photo", selection: $pickerItem, matching: .images)
-            
-            pickerImage?
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 200, height: 300)
-        }
-        .onChange(of: pickerItem) {
-            Task {
-                if let loadedImageData = try? await pickerItem?.loadTransferable(type: Data.self) {
-                    pickerUiImage = UIImage(data: loadedImageData)
-                    pickerImage = Image(uiImage: pickerUiImage!)
-                    
-                    recognizeText(from: pickerUiImage!)
-                } else {
-                    print("Failed to download image.")
+        ZStack {
+            VStack {
+                PhotosPicker("Select photo", selection: $pickerItem, matching: .images)
+                
+                pickerImage?
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 200, height: 300)
+                
+                if let rText = recognizedText {
+                    Text(rText)
+                        .font(.footnote)
                 }
+            }
+            .onChange(of: pickerItem) {
+                Task {
+                    isRecognizingText = true
+                    
+                    if let loadedImageData = try? await pickerItem?.loadTransferable(type: Data.self) {
+                        pickerUiImage = UIImage(data: loadedImageData)
+                        pickerImage = Image(uiImage: pickerUiImage!)
+                        recognizeText(from: pickerUiImage!)
+                    } else {
+                        print("Failed to download image.")
+                    }
+                }
+            }
+            
+            if isRecognizingText {
+                Rectangle()
+                    .fill()
+                    .opacity(0.3)
+                    .ignoresSafeArea()
+                
+                ProgressView()
             }
         }
     }
@@ -59,6 +79,9 @@ struct ContentView: View {
         }
         
         print(recognizedStrings)
+        recognizedText = recognizedStrings.joined(separator: ", ")
+        
+        isRecognizingText = false
     }
 }
 
