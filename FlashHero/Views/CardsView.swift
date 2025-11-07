@@ -8,22 +8,16 @@
 import SwiftUI
 
 struct CardsView: View {
+    let flashcards: [Flashcard]
+
     var body: some View {
         TabView {
-            CardView(
-                title: "Welcome",
-                description: "This is the first card. You can use it to show some introductory content."
-            )
-            
-            CardView(
-                title: "Discover",
-                description: "This second card can highlight a feature or some key information."
-            )
-            
-            CardView(
-                title: "Get Started",
-                description: "This last card can guide users to begin exploring your app."
-            )
+            ForEach(flashcards) { card in
+                CardView(
+                    title: card.concept,
+                    description: card.definition
+                )
+            }
         }
         .tabViewStyle(.page)
         .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -31,5 +25,12 @@ struct CardsView: View {
 }
 
 #Preview {
-    CardsView()
+    CardsView(flashcards: [
+        Flashcard(concept: "Conditional Probability",
+                  definition: "The probability of A given B, written as P(A|B)."),
+        Flashcard(concept: "Bayes’ Rule",
+                  definition: "Relates conditional probabilities: P(A|B) = P(B|A) * P(A) / P(B)."),
+        Flashcard(concept: "Naive Bayes",
+                  definition: "A classifier assuming features are independent given the class.")
+    ])
 }

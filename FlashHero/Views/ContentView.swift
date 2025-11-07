@@ -42,7 +42,7 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.isShowingCardView) {
-                CardsView()
+                CardsView(flashcards: viewModel.flashcards)
             }
         }
     }

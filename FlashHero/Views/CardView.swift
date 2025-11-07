@@ -23,7 +23,6 @@ struct CardView: View {
             Text(description)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .lineLimit(3)
                 .padding([.horizontal, .bottom])
         }
         .frame(maxWidth: .infinity, alignment: .leading)
