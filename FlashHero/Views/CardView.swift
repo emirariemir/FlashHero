@@ -20,11 +20,16 @@ struct CardView: View {
             
             Divider()
             
+            Spacer()
+            
             Text(description)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .padding([.horizontal, .bottom])
+            
+            Spacer()
         }
+        .frame(height: 245)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 12)

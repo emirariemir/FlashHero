@@ -14,24 +14,24 @@ struct FlashcardsJsonScheme: JSONSchemaConvertible {
     static let example: FlashcardsJsonScheme = {
         .init(flashcards: [
             FlashcardJsonScheme(
-                concept: "Model-View-ViewModel (MVVM)",
-                definition: "Model-View-ViewModel (MVVM) is an architectural pattern that separates a software application's user interface (UI) from its business logic, promoting modularity and testability."
+                concept: "What problem does MVVM solve in app development?",
+                definition: "MVVM separates the UI from business logic, making your code easier to test, scale, and maintain. The ViewModel exposes data the View can react to without knowing where it comes from."
             ),
             FlashcardJsonScheme(
-                concept: "Combine Framework",
-                definition: "Combine is Apple’s reactive programming framework that processes asynchronous events over time using publishers and subscribers."
+                concept: "How does the Combine framework help you handle async events?",
+                definition: "Combine lets you work with data streams over time using publishers and subscribers. It's especially useful for things like network calls, timers, or UI updates that depend on changing data."
             ),
             FlashcardJsonScheme(
-                concept: "SwiftUI State Management",
-                definition: "SwiftUI uses property wrappers like @State, @Binding, and @ObservedObject to manage and synchronize UI state efficiently."
+                concept: "How does SwiftUI manage state across views?",
+                definition: "By using property wrappers like @State for simple local state, @Binding for passing state, and @ObservedObject or @StateObject for external data models that trigger UI updates."
             ),
             FlashcardJsonScheme(
-                concept: "WidgetKit",
-                definition: "WidgetKit is a framework that allows developers to build home screen widgets for iOS, displaying glanceable and timely information from their apps."
+                concept: "What can I build with WidgetKit?",
+                definition: "WidgetKit lets you create Home Screen widgets that show quick, glanceable information from your app — like crypto prices, to-dos, or step counts — without opening the app."
             ),
             FlashcardJsonScheme(
-                concept: "Concurrency with async/await",
-                definition: "Swift’s async/await syntax allows developers to write asynchronous code that is readable and structured like synchronous code, improving clarity and safety."
+                concept: "Why is async/await better than completion handlers?",
+                definition: "With async/await, your asynchronous code reads like synchronous code. It's easier to follow, avoids callback pyramids, and works seamlessly with tasks and structured concurrency."
             )
         ])
     }()

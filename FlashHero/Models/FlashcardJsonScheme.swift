@@ -14,7 +14,7 @@ struct FlashcardJsonScheme: JSONSchemaConvertible {
     
     static let example: FlashcardJsonScheme = {
         .init(
-            concept: "Model-View-ViewModel (MVVM)",
+            concept: "What is Model-View-ViewModel (MVVM)?",
             definition: "Model-View-ViewModel (MVVM) is an architectural pattern that separates a software application's user interface (UI) from its business logic, promoting modularity and testability."
         )
     }()

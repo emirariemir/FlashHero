@@ -19,7 +19,7 @@ class ContentViewModel: ObservableObject {
     @Published var isShowingCardView: Bool = false
     @Published var flashcards: [Flashcard] = []
     
-    private let openAi = OpenAI(apiToken: "my_dummy_key")
+    private let openAi = OpenAI(apiToken: "my_dummy_api_key")
     
     func handlePickerItemChange() {
         Task {
@@ -92,8 +92,8 @@ class ContentViewModel: ObservableObject {
         do {
             // create query element
             let query = CreateModelResponseQuery(
-                input: .textInput("You are personalized education tutor and you will create personalized flashcarrds for a given set of keywords recognized from user's own notes. Those words could include typos since they are being recognized from a photo of the notebook. You will analyze the tone that user takes notes and you will provide the flashcards according to that tone. You will provide 5 flashcards with the most important aspects of the context. You will also have to use a friendly tone to provide a friendly response to our flashcards. Make 5 flash cards with the most important concepts of the subject. These are the keywords recognized from user's notebook: \(context)"),
-                model: .gpt5_nano,
+                input: .textInput("You are a personalized educational tutor. Your task is to generate 25 high-quality flashcards based on keywords extracted from a user's handwritten notes. These keywords may contain typos, so you should infer the correct terms and identify the subject area they relate to. Your flashcards must: Be written in a friendly, approachable tone (no emojis), Be informative and accurate, Clearly explain the concept in a way that helps someone learning it for the first time, Be phrased as question → answer pairs (like real flashcards), Focus on the most important concepts related to the subject, Avoid unnecessary jargon where possible, or explain it simply, Be helpful even if the user is a beginner. Use the provided keywords to determine the topic, then generate flashcards that best support understanding of that topic. Here are the keywords recognized from the user’s notebook: \(context)"),
+                model: .gpt4_1_mini,
                 text: .jsonSchema(
                     .init(name: "flashcard", schema: .derivedJsonSchema(FlashcardsJsonScheme.self), description: nil, strict: true)
                 )
