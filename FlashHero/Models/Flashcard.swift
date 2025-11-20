@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Flashcard: Codable, Identifiable {
+struct Flashcard: Codable, Identifiable, Equatable {
     let concept: String
     let definition: String
     
