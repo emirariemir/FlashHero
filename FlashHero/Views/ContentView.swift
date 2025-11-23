@@ -13,15 +13,11 @@ struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
     @State private var showCardsSheet = false
     
-    // Dummy data for the list
-    let dummyFolders = [
-        ("Biology Study Set", "Biology"),
-        ("Spanish Vocabulary", "Languages"),
-        ("Math Formulas", "Mathematics"),
-        ("History Notes", "History"),
-        ("Chemistry Basics", "Science"),
-        ("Programming Terms", "Computer Science")
-    ]
+    // Fetch folders from Core Data
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Folder.name, ascending: true)],
+        animation: .default)
+    private var folders: FetchedResults<Folder>
     
     var body: some View {
         NavigationStack {
@@ -38,7 +34,7 @@ struct ContentView: View {
                     .padding()
                     
                     // List of folders
-                    if dummyFolders.isEmpty {
+                    if folders.isEmpty {
                         // Empty state
                         VStack(spacing: 20) {
                             Image(systemName: "tray")
@@ -59,8 +55,11 @@ struct ContentView: View {
                                 GridItem(.flexible()),
                                 GridItem(.flexible())
                             ], spacing: 16) {
-                                ForEach(dummyFolders, id: \.0) { folder in
-                                    FolderCard(title: folder.0, subtitle: folder.1)
+                                ForEach(folders) { folder in
+                                    FolderCard(
+                                        title: folder.name ?? "Untitled",
+                                        cardCount: folder.cardsArray.count
+                                    )
                                 }
                             }
                             .padding()
@@ -132,7 +131,7 @@ struct ContentView: View {
 // Folder Card Component
 struct FolderCard: View {
     let title: String
-    let subtitle: String
+    let cardCount: Int
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -146,7 +145,7 @@ struct FolderCard: View {
                     .lineLimit(2)
                     .foregroundColor(.primary)
                 
-                Text(subtitle)
+                Text("\(cardCount) card\(cardCount != 1 ? "s" : "")")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -161,6 +160,14 @@ struct FolderCard: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
         )
+    }
+}
+
+// Extension to safely access cards array from Folder
+extension Folder {
+    var cardsArray: [Card] {
+        let set = cards as? Set<Card> ?? []
+        return Array(set)
     }
 }
 
